@@ -179,11 +179,11 @@ function InicioView({ setTab }) {
         </div>
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
           Aprende Electrocardiograma <br />
-          <span className="text-rose-600">en una hora</span>
+          <span className="text-rose-600">fácil y en una hora</span>
         </h1>
         <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-prose mx-auto">
-          Bienvenido a esta herramienta interactiva diseñada para entender el electrocardiograma rápidamente y de forma estructurada.
-          Aquí encontrarás desde los conceptos básicos hasta las patologías más importantes.
+          Bienvenido a esta herramienta interactiva diseñada para entender el electrocardiograma de forma <strong>fácil, rápida y estructurada</strong>.
+          Aquí encontrarás desde los conceptos básicos hasta las patologías más importantes, explicado de manera sencilla.
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
@@ -897,7 +897,7 @@ function IsquemiaContent() {
           <h5 className="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wide">Consideraciones:</h5>
           <ul className="list-disc list-inside text-sm text-slate-600 space-y-2">
             <li>Cuando hay <strong>Q patológica</strong> ya podemos hablar de infarto.</li>
-            <li>Se puede hablar de <strong>IAM CEST</strong> pero no IAM SEST (en términos de Q).</li>
+            <li>Se puede hablar de <strong>IAM CEST</strong> pero no IAM SEST.</li>
             <li className="bg-white p-3 rounded border border-slate-100 text-slate-700 italic">
               "Si el paciente tiene una elevación del ST, se puede llamar <strong>infarto agudo al miocardio</strong> en el <strong>diagnóstico electrocardiográfico</strong>, dada la gravedad de la condición."
             </li>
