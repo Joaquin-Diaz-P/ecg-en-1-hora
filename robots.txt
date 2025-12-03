@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://joaquin-diaz-p.github.io/ecg-en-1-hora/sitemap.xml
