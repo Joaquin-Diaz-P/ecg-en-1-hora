@@ -52,11 +52,52 @@ const EcgTInverted = () => (
   </svg>
 );
 
+const tabLabels = {
+  inicio: 'Inicio',
+  'como-leer': '¿Cómo leer un ECG?',
+  'analisis-inicial': 'Análisis Inicial',
+  'por-partes': 'Análisis por partes de la onda',
+  'cardiopatia-isquemica': 'Cardiopatía Isquémica',
+  arritmias: 'Arritmias',
+};
+
+function trackAnalyticsEvent(eventName, params = {}) {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+    return;
+  }
+
+  window.gtag('event', eventName, {
+    app_name: 'ECG en 1 hora',
+    ...params,
+  });
+}
+
+function trackSectionView(sectionId, sectionLabel, includePageView = true) {
+  trackAnalyticsEvent('study_section_view', {
+    section_id: sectionId,
+    section_title: sectionLabel,
+    content_group: 'study_section',
+  });
+
+  if (!includePageView || typeof window === 'undefined') {
+    return;
+  }
+
+  const cleanPath = `${window.location.pathname.replace(/\/$/, '')}/#${sectionId}`;
+  trackAnalyticsEvent('page_view', {
+    page_title: `${sectionLabel} | ECG en 1 hora`,
+    page_location: `${window.location.origin}${cleanPath}`,
+    page_path: cleanPath,
+    section_id: sectionId,
+  });
+}
+
 // --- Main Application Component ---
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('inicio');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const hasTrackedInitialSection = useRef(false);
 
   // Definición de las pestañas
   const tabs = [
@@ -77,7 +118,27 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0 });
+    const sectionLabel = tabLabels[activeTab] ?? activeTab;
+    trackSectionView(activeTab, sectionLabel, hasTrackedInitialSection.current);
+    hasTrackedInitialSection.current = true;
   }, [activeTab]);
+
+  useEffect(() => {
+    trackAnalyticsEvent('study_session_start');
+
+    const milestones = [30, 120, 300].map((seconds) => (
+      window.setTimeout(() => {
+        trackAnalyticsEvent('study_milestone', {
+          study_seconds: seconds,
+          milestone_label: `${seconds}_seconds`,
+        });
+      }, seconds * 1000)
+    ));
+
+    return () => {
+      milestones.forEach((timeoutId) => window.clearTimeout(timeoutId));
+    };
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -919,7 +980,7 @@ function ArrhythmiaGroupCard({ group, selectedId, onSelect }) {
             <button
               key={item.id}
               type="button"
-              onClick={() => onSelect(item.id)}
+              onClick={() => onSelect(item, group.title)}
               className={`group flex w-full items-start justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-sm leading-snug transition-colors ${isSelected
                 ? 'bg-rose-50 text-slate-950 ring-1 ring-rose-100'
                 : 'text-slate-700 hover:bg-slate-50 hover:text-slate-950'}`}
@@ -1034,8 +1095,15 @@ function ArritmiasContent() {
   const [selectedId, setSelectedId] = useState(arrhythmiaGroups[0].items[0].id);
   const viewerRef = useRef(null);
   const selectedArrhythmia = allArrhythmias.find((item) => item.id === selectedId) ?? allArrhythmias[0];
-  const handleSelectArrhythmia = (id) => {
-    setSelectedId(id);
+  const handleSelectArrhythmia = (item, groupTitle) => {
+    setSelectedId(item.id);
+    trackAnalyticsEvent('arrhythmia_selected', {
+      arrhythmia_id: item.id,
+      arrhythmia_name: item.name,
+      arrhythmia_group: groupTitle,
+      rhythm_type: item.type,
+      section_id: 'arritmias',
+    });
     window.requestAnimationFrame(() => {
       viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
