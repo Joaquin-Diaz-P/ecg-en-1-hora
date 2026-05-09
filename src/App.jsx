@@ -627,13 +627,13 @@ function PorPartesView() {
                 <li>
                   <strong>P ancha y mellada</strong> ({'>'} 0,12s o 3 cuadritos): crecimiento auricular <em>izquierdo</em>
                   <ul className="list-disc list-inside pl-4 text-blue-600 italic mt-1">
-                    <li>"La Pancha es comunista"</li>
+                    <li>"Pancha {'->'} Izquierda"</li>
                   </ul>
                 </li>
                 <li>
                   <strong>P alta</strong> ({'>'} 2,5 mm o 2,5 cuadritos): crecimiento auricular <em>derecho</em>
                   <ul className="list-disc list-inside pl-4 text-blue-600 italic mt-1">
-                    <li>"La Palta es de cuicos"</li>
+                    <li>"Palta {'->'} Derecha"</li>
                   </ul>
                 </li>
                 <li>Podría darse ambos, raro. CAI más común que CAD</li>
